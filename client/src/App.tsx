@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSpeechToText } from './hooks/useSpeechToText';
 import { RecordingTimer } from './components/RecordingTimer';
 import { StatusIndicator } from './components/StatusIndicator';

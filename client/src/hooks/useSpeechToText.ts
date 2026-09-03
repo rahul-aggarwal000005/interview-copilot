@@ -14,7 +14,7 @@ export function useSpeechToText(options?: { systemPrompt?: string }) {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const lastSpeakerRef = useRef<number | null>(null);
-  const llmTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const llmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const transcriptRef = useRef<string>("");
   const systemPromptRef = useRef<string>(options?.systemPrompt || "");
 
@@ -134,7 +134,6 @@ export function useSpeechToText(options?: { systemPrompt?: string }) {
               // before triggering the LLM. This prevents sentences from splitting if Deepgram finalizes early.
               if (lastSpeaker === 0) {
                 llmTimerRef.current = setTimeout(() => {
-                  const currentTranscript = transcriptRef.current;
                   const thinkingIndicator = "\n\n🤖 JARVIS : 💭 *Thinking...*";
                   
                   setTranscript((prev) => {

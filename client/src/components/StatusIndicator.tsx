@@ -1,4 +1,4 @@
-import React from 'react';
+
 import type { ConnectionState } from '../types';
 
 interface StatusIndicatorProps {

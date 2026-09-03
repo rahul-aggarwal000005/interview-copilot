@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import type { ConnectionState } from '../types';
 
 interface RecordingTimerProps {
@@ -9,7 +9,7 @@ export function RecordingTimer({ connectionState }: RecordingTimerProps) {
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setTimeout>;
 
     if (connectionState === 'listening') {
       interval = setInterval(() => {
