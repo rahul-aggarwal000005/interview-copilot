@@ -30,10 +30,10 @@ export function setupWebSocket(server: Server) {
       const deepgramLive = await deepgram.listen.v1.connect({
         model: "nova-2",
         language: "en-US",
-        smart_format: true,
-        interim_results: true,
-        diarize: true,
-        endpointing: 500,
+        smart_format: "true",
+        interim_results: "true",
+        diarize: "true",
+        endpointing: "500",
       });
 
       let earlyMessages: Buffer[] = [];
