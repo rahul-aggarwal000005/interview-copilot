@@ -21,8 +21,8 @@ An advanced, real-time AI Interview Copilot built for candidates to use during r
 
 ### Prerequisites
 You will need API keys for:
-1. **Deepgram** (Speech-to-Text)
-2. **Groq** (LLM generation)
+1. **Deepgram** (Speech-to-Text): [Create a free account here](https://console.deepgram.com/signup)
+2. **Groq** (LLM generation): [Create a free account here](https://console.groq.com/keys)
 
 ### Setup
 1. Clone the repository.
