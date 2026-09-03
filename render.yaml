@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: interview-copilot-backend
+    env: node
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: DEEPGRAM_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: CLIENT_URL
+        sync: false
