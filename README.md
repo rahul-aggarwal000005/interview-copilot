@@ -1,93 +1,75 @@
-# Real-Time Speech-to-Text Application
+# 🎙️ AI Interview Copilot
 
-This is a production-ready Web Application that converts speech to text in real-time using Deepgram's streaming API.
+An advanced, real-time AI Interview Copilot built for candidates to use during remote interviews. The copilot listens to the interviewer's questions via WebSockets, processes the speech using **Deepgram**, and generates highly concise, conversational responses using **Groq (Llama3/GPT-OSS)** for the candidate to read naturally.
 
-## Architecture
+## ✨ Features
+- **Real-Time Speech-to-Text:** Uses Deepgram's Nova-2 model with aggressive endpointing for ultra-fast, continuous transcription.
+- **Smart Speaker Diarization:** Actively filters out background noise and the candidate's own voice, ensuring the LLM only responds to the *Interviewer*.
+- **Dynamic AI Persona:** Configurable system prompts allow you to change the AI's "brain" (e.g., Senior Software Engineer vs. KYC Analyst) directly from the UI.
+- **Silence Debounce Engine:** Custom frontend Javascript timers prevent sentence splitting by waiting for natural conversational pauses before triggering the LLM.
+- **Markdown Editor:** A clean, distraction-free markdown interface for reading the AI's responses naturally.
+- **Split Architecture:** Secure Node.js/Express backend to protect API keys, coupled with a blazing-fast React/Vite frontend.
 
-```text
-React (Client)                         Node.js (Server)                      Deepgram API
-  │                                        │                                      │
-  │     1. Start Microphone                │                                      │
-  │───────────────────────────────────────>│                                      │
-  │                                        │                                      │
-  │     2. Connect WebSocket               │                                      │
-  │───────────────────────────────────────>│                                      │
-  │                                        │    3. Open WebSocket Connection      │
-  │                                        │─────────────────────────────────────>│
-  │                                        │                                      │
-  │     4. Stream Audio Chunks             │                                      │
-  │───────────────────────────────────────>│    5. Forward Audio Chunks           │
-  │                                        │─────────────────────────────────────>│
-  │                                        │                                      │
-  │                                        │    6. Return Interim/Final Results   │
-  │                                        │<─────────────────────────────────────│
-  │     7. Broadcast Transcripts           │                                      │
-  │<───────────────────────────────────────│                                      │
-  │                                        │                                      │
-```
+## 🚀 Tech Stack
+* **Frontend:** React, TypeScript, Vite, Tailwind CSS, `@uiw/react-md-editor`
+* **Backend:** Node.js, Express, `ws` (WebSockets)
+* **AI & APIs:** Deepgram (Nova-2 Speech-to-Text), Groq (Fast LLM Inference)
 
-## Tech Stack
+---
 
-**Frontend:** React, TypeScript, Vite, Tailwind CSS v4, HTML5 MediaStream API
-**Backend:** Node.js, Express, TypeScript, `ws` (WebSockets), `@deepgram/sdk`
+## 💻 Local Development
 
-## Prerequisites
+### Prerequisites
+You will need API keys for:
+1. **Deepgram** (Speech-to-Text)
+2. **Groq** (LLM generation)
 
-- Node.js >= 18
-- A Deepgram API key (sign up at [Deepgram](https://console.deepgram.com/))
-
-## Installation & Setup
-
-1. Clone the repository and install all dependencies:
+### Setup
+1. Clone the repository.
+2. Inside the `server` directory, create a `.env` file based on `.env.example`:
    ```bash
-   # Install root dependencies
-   npm run install:all
+   DEEPGRAM_API_KEY=your_deepgram_key
+   GROQ_API_KEY=your_groq_key
+   CLIENT_URL=http://localhost:5173
    ```
-   Or manually install:
-   ```bash
-   npm install
-   cd client && npm install
-   cd ../server && npm install
-   ```
-
-2. Configure environment variables in the server:
+3. Open two terminals. In the first, run the backend:
    ```bash
    cd server
-   cp .env.example .env
+   npm install
+   npm run dev
    ```
-   Open `server/.env` and add your `DEEPGRAM_API_KEY`.
+4. In the second terminal, run the frontend:
+   ```bash
+   cd client
+   npm install
+   npm run dev
+   ```
+5. Navigate to `http://localhost:5173` in your browser.
 
-## Running the Application
+---
 
-### Running Both Together (Recommended)
-From the project root:
-```bash
-npm run dev
-```
+## 🌐 Production Deployment (Free)
 
-### Running Separately
+This project is configured for automated, 100% free deployment using **Render** (Backend) and **Vercel** (Frontend).
 
-**Backend:**
-```bash
-cd server
-npm run dev
-```
-The server will start on `http://localhost:5000`.
+### 1. Backend (Render.com)
+The backend uses WebSockets, so it must be hosted on a platform that supports continuous connections.
+- Connect your GitHub repository to Render as a **Blueprint**.
+- Render will automatically detect the `render.yaml` file in the root directory.
+- Add your `DEEPGRAM_API_KEY` and `GROQ_API_KEY` to the Environment Variables in the Render dashboard.
 
-**Frontend:**
-```bash
-cd client
-npm run dev
-```
-The frontend will start on `http://localhost:5173`.
+### 2. Frontend (Vercel.com)
+- Import your GitHub repository to Vercel.
+- Vercel will automatically detect the `vercel.json` file.
+- **Crucial:** Add an Environment Variable named `VITE_WS_URL`. Set the value to your new Render backend URL (e.g., `wss://your-backend.onrender.com`). *Note the `wss://` prefix!*
 
-## Security Considerations
+---
 
-- **API Keys:** The Deepgram API key is never exposed to the frontend; all audio is streamed securely through our Node.js backend.
-- **Audio Privacy:** Audio chunks are buffered in memory and sent directly to Deepgram; they are never saved to disk.
-- **CORS:** Ensure you have correctly configured the `CLIENT_URL` in `.env` for production environments to prevent unauthorized connections.
-
-## Troubleshooting
-
-- **Microphone Permissions:** If the app cannot hear you, check that your browser hasn't blocked microphone permissions for localhost.
-- **WebSocket Connection Drops:** This can happen if the Deepgram API key is invalid or expired. Check the server console for error logs.
+## 🛠️ How it Works
+1. The React frontend captures your system microphone and streams raw audio blobs over a WebSocket to the Node.js backend.
+2. The backend proxies the audio directly to Deepgram's live streaming API.
+3. Deepgram returns interim and final transcripts with speaker diarization tags.
+4. The frontend filters out any speaker that isn't the primary interviewer (Speaker 0).
+5. Once the interviewer pauses for 1.5 seconds, the frontend ships the compiled transcript history to the backend.
+6. The backend queries Groq's high-speed inference engine with the custom AI Persona prompt.
+7. The AI's response is streamed back to the frontend's markdown viewer for the candidate to read.
