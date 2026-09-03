@@ -38,15 +38,15 @@ function App() {
 
   return (
     <div className="h-screen bg-gray-50 flex flex-col font-sans overflow-hidden">
-      <header className="px-6 py-4 flex items-center justify-between bg-white border-b border-gray-200 shrink-0">
-        <div className="flex items-center space-x-6">
+      <header className="px-4 md:px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white border-b border-gray-200 shrink-0">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 w-full md:w-auto">
           <h1 className="text-xl font-bold text-gray-900 tracking-tight">
             Interview Copilot
           </h1>
           <StatusIndicator connectionState={connectionState} errorMessage={errorMessage} />
         </div>
         
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-wrap items-center gap-2 md:gap-4 w-full md:w-auto">
           <button
             onClick={() => setShowPromptSettings(true)}
             className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md font-medium text-sm transition-colors shadow-sm border border-gray-300"
@@ -58,17 +58,17 @@ function App() {
           
           <button 
             onClick={connectionState === 'listening' ? stopListening : startListening}
-            className={`px-4 py-2 rounded-md font-medium text-white transition-colors shadow-sm ${
+            className={`px-3 md:px-4 py-2 rounded-md font-medium text-sm md:text-base text-white transition-colors shadow-sm ${
               connectionState === 'listening' ? 'bg-red-500 hover:bg-red-600' : 'bg-indigo-600 hover:bg-indigo-700'
             }`}
           >
-            {connectionState === 'listening' ? 'Stop Listening' : 'Start Listening'}
+            {connectionState === 'listening' ? 'Stop' : 'Start'}
           </button>
           
           <button 
             onClick={clearTranscript}
             disabled={!transcript && !interimTranscript}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md font-medium shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 md:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md font-medium text-sm md:text-base shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Clear
           </button>
